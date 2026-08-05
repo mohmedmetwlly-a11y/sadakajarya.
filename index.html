@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صدقة جارية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0f2a24;
+    --bg-panel: #163a30;
+    --bg-panel-light: #1c473b;
+    --gold: #c9a15a;
+    --gold-light: #e8d5a0;
+    --text: #f2ede0;
+    --text-muted: #a8bdb3;
+    --line: rgba(201,161,90,0.25);
+    --done: #6fae8c;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(201,161,90,0.07), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(201,161,90,0.06), transparent 40%);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+  }
+  .amiri{ font-family: 'Amiri', serif; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position: relative;
+    padding: 70px 20px 50px;
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .star{
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 480px; height: 480px;
+    transform: translate(-50%,-50%);
+    opacity: 0.08;
+    animation: spin 120s linear infinite;
+  }
+  @keyframes spin{ to{ transform: translate(-50%,-50%) rotate(360deg); } }
+  .hero-content{ position: relative; z-index: 1; }
+  .eyebrow{
+    color: var(--gold);
+    letter-spacing: 3px;
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .names{
+    font-family: 'Amiri', serif;
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1.6;
+  }
+  .dates{
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-top: 6px;
+  }
+  .dua-line{
+    margin-top: 26px;
+    font-family: 'Amiri', serif;
+    font-size: 20px;
+    color: var(--text);
+    max-width: 560px;
+    margin-inline: auto;
+    line-height: 2;
+  }
+  .hadith{
+    margin-top: 34px;
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin-inline: auto;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    line-height: 2.1;
+  }
+  .hadith b{ color: var(--gold); display:block; margin-bottom:6px; font-weight:500;}
+
+  /* ---------- Overall progress ---------- */
+  .overall{
+    max-width: 640px;
+    margin: 36px auto 0;
+    padding: 0 20px;
+  }
+  .overall-bar-track{
+    height: 8px;
+    border-radius: 4px;
+    background: var(--bg-panel-light);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .overall-bar-fill{
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    width: 0%;
+    transition: width .4s ease;
+  }
+  .overall-label{
+    text-align:center;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;
+    justify-content:center;
+    gap: 8px;
+    max-width: 640px;
+    margin: 30px auto 0;
+    padding: 0 20px;
+    flex-wrap: wrap;
+  }
+  .tab-btn{
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text-muted);
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .tab-btn.active{
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #142521;
+    font-weight: 700;
+  }
+  .tab-btn:hover:not(.active){
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+
+  /* ---------- Panels ---------- */
+  main{
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 30px 20px 70px;
+  }
+  .panel{ display:none; }
+  .panel.active{ display:block; animation: fade .3s ease; }
+  @keyframes fade{ from{opacity:0; transform: translateY(6px);} to{opacity:1; transform:none;} }
+
+  .panel-progress{
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .panel-progress span{ color: var(--gold-light); font-weight:700; }
+
+  .item{
+    display:flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .item:hover{ border-color: var(--gold); }
+  .item.done{ background: var(--bg-panel-light); }
+  .check{
+    flex-shrink:0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--text-muted);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 14px;
+    color: transparent;
+    transition: all .2s ease;
+  }
+  .item.done .check{
+    border-color: var(--done);
+    background: var(--done);
+    color: #0f2a24;
+  }
+  .item-text{ flex: 1; }
+  .item-title{ font-size: 16px; font-weight: 500; }
+  .item-title.amiri{ font-size: 18px; }
+  .item-sub{ font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+  .quran-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(64px,1fr));
+    gap: 10px;
+  }
+  .juz{
+    aspect-ratio: 1;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--bg-panel);
+    display:flex; align-items:center; justify-content:center;
+    flex-direction: column;
+    cursor:pointer;
+    transition: all .2s ease;
+  }
+  .juz:hover{ border-color: var(--gold); }
+  .juz.done{
+    background: var(--done);
+    border-color: var(--done);
+  }
+  .juz.done .juz-num, .juz.done .juz-label{ color: #0f2a24; }
+  .juz-num{ font-size: 18px; font-weight: 700; color: var(--gold-light); }
+  .juz-label{ font-size: 10px; color: var(--text-muted); margin-top:2px;}
+
+  footer{
+    text-align:center;
+    padding: 30px 20px 50px;
+    color: var(--text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .loading{
+    text-align:center;
+    color: var(--text-muted);
+    padding: 40px;
+    font-size: 14px;
+  }
+  .note{
+    text-align:center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 20px;
+    line-height: 1.9;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <svg class="star" viewBox="0 0 200 200">
+    <g stroke="#c9a15a" stroke-width="0.6" fill="none">
+      <polygon points="100,10 122,78 193,78 135,120 157,190 100,148 43,190 65,120 7,78 78,78" />
+      <circle cx="100" cy="100" r="90" />
+      <circle cx="100" cy="100" r="70" />
+    </g>
+  </svg>
+  <div class="hero-content">
+    <div class="eyebrow">صدقة جارية</div>
+    <div class="names amiri">عيسى أحمد متولي &nbsp;و&nbsp; حمدية محمد عوض</div>
+    <div class="dates">رحمهما الله رحمة واسعة</div>
+    <div class="dua-line">
+      اللهم اغفر لهما وارحمهما وعافهما واعف عنهما،<br>
+      واجعل هذا العمل صدقة جارية تنفعهما بعد موتهما
+    </div>
+    <div class="hadith">
+      <b>قال رسول الله ﷺ</b>
+      إذا مات ابن آدم انقطع عمله إلا من ثلاث: صدقة جارية، أو علم ينتفع به، أو ولد صالح يدعو له
+    </div>
+  </div>
+</div>
+
+<div class="overall">
+  <div class="overall-bar-track"><div class="overall-bar-fill" id="overallBar"></div></div>
+  <div class="overall-label" id="overallLabel">جاري تحميل التقدّم...</div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="tasbih">تسبيحات</button>
+  <button class="tab-btn" data-tab="duas">أدعية</button>
+  <button class="tab-btn" data-tab="quran">ختمة القرآن</button>
+</div>
+
+<main>
+
+  <div class="panel active" id="panel-tasbih">
+    <div class="panel-progress">تم إنجاز <span id="tasbihCount">0</span> من <span id="tasbihTotal">0</span></div>
+    <div id="tasbihList"></div>
+  </div>
+
+  <div class="panel" id="panel-duas">
+    <div class="panel-progress">تم إنجاز <span id="duasCount">0</span> من <span id="duasTotal">0</span></div>
+    <div id="duasList"></div>
+  </div>
+
+  <div class="panel" id="panel-quran">
+    <div class="panel-progress">تمت قراءة <span id="quranCount">0</span> من 30 جزء</div>
+    <div class="quran-grid" id="quranGrid"></div>
+    <div class="note">اضغط على أي جزء بعد الانتهاء من قراءته، والهدف إتمام ختمة كاملة لهما 🤍</div>
+  </div>
+
+</main>
+
+<footer>
+  اللهم تقبل منا ومنكم، واجعله في ميزان حسناتهما
+</footer>
+
+<script>
+const TASBIH = [
+  { id: 't1', title: 'سبحان الله وبحمده، سبحان الله العظيم', sub: '100 مرة' },
+  { id: 't2', title: 'لا إله إلا الله وحده لا شريك له', sub: '100 مرة' },
+  { id: 't3', title: 'أستغفر الله العظيم وأتوب إليه', sub: '100 مرة' },
+  { id: 't4', title: 'اللهم صلِّ وسلم على سيدنا محمد', sub: '100 مرة' },
+  { id: 't5', title: 'سبحان الله، والحمد لله، ولا إله إلا الله، والله أكبر', sub: '25 مرة (100 كلمة)' },
+  { id: 't6', title: 'لا حول ولا قوة إلا بالله', sub: '100 مرة' },
+  { id: 't7', title: 'تسبيح دبر الصلاة: سبحان الله (33) الحمد لله (33) الله أكبر (34)', sub: 'بعد كل صلاة' },
+  { id: 't8', title: 'آية الكرسي', sub: 'بعد كل صلاة مفروضة' },
+];
+
+const DUAS = [
+  { id: 'd1', title: 'اللهم اغفر لهما وارحمهما وعافهما واعف عنهما' },
+  { id: 'd2', title: 'اللهم أكرم نزلهما ووسّع مدخلهما' },
+  { id: 'd3', title: 'اللهم اغسلهما بالماء والثلج والبرد، ونقّهما من الخطايا' },
+  { id: 'd4', title: 'اللهم أبدلهما دارًا خيرًا من دارهما، وأهلًا خيرًا من أهلهما' },
+  { id: 'd5', title: 'اللهم افسح لهما في قبريهما، ونوّر لهما فيه' },
+  { id: 'd6', title: 'اللهم اجعل قبريهما روضة من رياض الجنة' },
+  { id: 'd7', title: 'اللهم ارحم غربتهما، وآنس وحشتهما' },
+];
+
+let state = { tasbih: {}, duas: {}, quran: {} };
+
+function itemHTML(item, kind, extraClass){
+  const done = state[kind][item.id] ? 'done' : '';
+  return `<div class="item ${done} ${extraClass||''}" data-kind="${kind}" data-id="${item.id}">
+      <div class="check">✓</div>
+      <div class="item-text">
+        <div class="item-title amiri">${item.title}</div>
+        ${item.sub ? `<div class="item-sub">${item.sub}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+function renderTasbih(){
+  document.getElementById('tasbihList').innerHTML = TASBIH.map(i => itemHTML(i,'tasbih')).join('');
+  document.getElementById('tasbihTotal').textContent = TASBIH.length;
+  document.getElementById('tasbihCount').textContent = TASBIH.filter(i => state.tasbih[i.id]).length;
+}
+function renderDuas(){
+  document.getElementById('duasList').innerHTML = DUAS.map(i => itemHTML(i,'duas')).join('');
+  document.getElementById('duasTotal').textContent = DUAS.length;
+  document.getElementById('duasCount').textContent = DUAS.filter(i => state.duas[i.id]).length;
+}
+function renderQuran(){
+  let html = '';
+  for(let j=1;j<=30;j++){
+    const done = state.quran['j'+j] ? 'done' : '';
+    html += `<div class="juz ${done}" data-kind="quran" data-id="j${j}">
+        <div class="juz-num">${j}</div>
+        <div class="juz-label">جزء</div>
+      </div>`;
+  }
+  document.getElementById('quranGrid').innerHTML = html;
+  document.getElementById('quranCount').textContent = Object.values(state.quran).filter(Boolean).length;
+}
+function renderOverall(){
+  const totalItems = TASBIH.length + DUAS.length + 30;
+  const doneItems =
+    TASBIH.filter(i => state.tasbih[i.id]).length +
+    DUAS.filter(i => state.duas[i.id]).length +
+    Object.values(state.quran).filter(Boolean).length;
+  const pct = totalItems ? Math.round((doneItems/totalItems)*100) : 0;
+  document.getElementById('overallBar').style.width = pct + '%';
+  document.getElementById('overallLabel').textContent = `تم إنجاز ${doneItems} من ${totalItems} — ${pct}%`;
+}
+function renderAll(){
+  renderTasbih(); renderDuas(); renderQuran(); renderOverall();
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem('remembrance-progress');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      state = { tasbih: parsed.tasbih||{}, duas: parsed.duas||{}, quran: parsed.quran||{} };
+    }
+  }catch(e){
+    // no existing data yet, start fresh
+  }
+  renderAll();
+}
+
+function saveState(){
+  try{
+    localStorage.setItem('remembrance-progress', JSON.stringify(state));
+  }catch(e){
+    console.error('تعذر الحفظ', e);
+  }
+}
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-kind]');
+  if(el){
+    const kind = el.dataset.kind;
+    const id = el.dataset.id;
+    state[kind][id] = !state[kind][id];
+    renderAll();
+    saveState();
+    return;
+  }
+  const tabBtn = e.target.closest('.tab-btn');
+  if(tabBtn){
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tabBtn.classList.add('active');
+    document.getElementById('panel-' + tabBtn.dataset.tab).classList.add('active');
+  }
+});
+
+loadState();
+</script>
+
+</body>
+</html>
